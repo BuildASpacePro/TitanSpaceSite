@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Titan Space - Partner with us for your satellite mission">
+    <title>Contact | Titan Space</title>
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="logo">TITAN</a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/mission.html" class="nav-link">Mission</a></li>
+                <li><a href="/products.html" class="nav-link">Products</a></li>
+                <li><a href="/contact.html" class="nav-link active">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contact Hero -->
+    <section class="page-hero contact-hero">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="page-subtitle">Let's discuss your next mission</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form-container">
+                    <h2>Send us a message</h2>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" id="company" name="company">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a topic</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="products">Product Information</option>
+                                <option value="partnership">Partnership Opportunity</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="careers">Careers</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="6" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Send Message</button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <div class="info-block">
+                        <h3>Headquarters</h3>
+                        <p>
+                            Titan Space Ltd<br>
+                            Innovation Park<br>
+                            Cape Canaveral, FL 32920<br>
+                            United States
+                        </p>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>General Inquiries</h3>
+                        <p>
+                            <a href="mailto:info@titanspace.com">info@titanspace.com</a><br>
+                            <a href="tel:+1-555-TITAN-01">+1 (555) TITAN-01</a>
+                        </p>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>Business Development</h3>
+                        <p>
+                            <a href="mailto:partnerships@titanspace.com">partnerships@titanspace.com</a>
+                        </p>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>Media & Press</h3>
+                        <p>
+                            <a href="mailto:press@titanspace.com">press@titanspace.com</a>
+                        </p>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>Careers</h3>
+                        <p>
+                            Join our mission<br>
+                            <a href="mailto:careers@titanspace.com">careers@titanspace.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Titan Space Ltd</h4>
+                    <p>Pioneering satellite technology</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/mission.html">Mission</a></li>
+                        <li><a href="/products.html">Products</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Titan Space Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/src/scripts/main.js"></script>
+</body>
+</html>
