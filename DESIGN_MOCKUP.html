@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titan Space - Design Mockup & System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Design System */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .mockup-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .mockup-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #001d3d 0%, #000814 100%);
+            border-radius: 4px;
+        }
+
+        .mockup-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .mockup-header p {
+            font-size: 1.25rem;
+            color: #a0a0a0;
+        }
+
+        .section {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #0066ff;
+            display: inline-block;
+        }
+
+        .section-description {
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .color-swatch {
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .color-sample {
+            height: 120px;
+            width: 100%;
+        }
+
+        .color-info {
+            padding: 1rem;
+            background: #141414;
+        }
+
+        .color-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-value {
+            font-size: 0.875rem;
+            color: #666;
+            font-family: monospace;
+        }
+
+        /* Typography Showcase */
+        .type-sample {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #141414;
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .type-label {
+            font-size: 0.75rem;
+            color: #0066ff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Layout Mockups */
+        .layout-mockup {
+            background: #000;
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .mockup-label {
+            background: #0066ff;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .layout-content {
+            padding: 2rem;
+        }
+
+        /* Hero Mockup */
+        .hero-mockup {
+            background: linear-gradient(135deg, #001d3d 0%, #000814 100%);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-mockup::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,102,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #0066ff;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+        }
+
+        /* Component Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .component-card {
+            background: #141414;
+            border: 1px solid #1a1a1a;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            border-color: #0066ff;
+            transform: translateY(-4px);
+        }
+
+        .component-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.5rem;
+            color: #0066ff;
+        }
+
+        .component-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .component-card p {
+            color: #a0a0a0;
+        }
+
+        /* Navigation Mockup */
+        .nav-mockup {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+        }
+
+        /* Product Card Mockup */
+        .product-card-mockup {
+            background: #141414;
+            border: 1px solid #1a1a1a;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-card-mockup:hover {
+            border-color: #0066ff;
+            transform: translateY(-8px);
+        }
+
+        .product-image-mockup {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #001d3d 0%, #000814 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0066ff;
+            letter-spacing: 0.1em;
+        }
+
+        .product-info-mockup {
+            padding: 2rem;
+        }
+
+        .product-category {
+            font-size: 0.875rem;
+            color: #0066ff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-info-mockup h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-specs {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1a1a1a;
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        /* Stats Mockup */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #0066ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.125rem;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive Preview */
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .device-mockup {
+            background: #141414;
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+            padding: 1.5rem;
+        }
+
+        .device-label {
+            font-size: 0.875rem;
+            color: #0066ff;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .device-frame {
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 1rem;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .responsive-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-container">
+        <!-- Header -->
+        <div class="mockup-header">
+            <h1>TITAN SPACE</h1>
+            <p>Design System & Visual Mockup</p>
+            <p style="margin-top: 1rem; font-size: 1rem;">A minimalist, high-performance website inspired by SpaceX and Anduril</p>
+        </div>
+
+        <!-- Color Palette -->
+        <section class="section">
+            <h2 class="section-title">Color Palette</h2>
+            <p class="section-description">Dark theme with high contrast and strategic accent colors</p>
+
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-sample" style="background: #000000;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Background</div>
+                        <div class="color-value">#000000</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background: #0a0a0a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface</div>
+                        <div class="color-value">#0a0a0a</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background: #141414;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface Elevated</div>
+                        <div class="color-value">#141414</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background: #0066ff;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Accent Blue</div>
+                        <div class="color-value">#0066ff</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background: #ffffff;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text Primary</div>
+                        <div class="color-value">#ffffff</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background: #a0a0a0;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text Secondary</div>
+                        <div class="color-value">#a0a0a0</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="section">
+            <h2 class="section-title">Typography</h2>
+            <p class="section-description">Inter font family with fluid responsive sizing</p>
+
+            <div class="type-sample">
+                <div class="type-label">Hero Title (4rem / 64px)</div>
+                <h1 style="font-size: 4rem; font-weight: 700; letter-spacing: -0.03em;">Building the Future in Orbit</h1>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Section Title (3rem / 48px)</div>
+                <h2 style="font-size: 3rem; font-weight: 600; letter-spacing: -0.02em;">Our Mission</h2>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Card Title (2rem / 32px)</div>
+                <h3 style="font-size: 2rem; font-weight: 600;">TITAN-X Series</h3>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Body Text (1rem / 16px)</div>
+                <p style="font-size: 1rem; line-height: 1.6; color: #a0a0a0;">
+                    Advanced satellite architecture engineered for performance and reliability.
+                    Our platforms are designed to meet the demanding requirements of modern space missions.
+                </p>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Small Text / Labels (0.875rem / 14px)</div>
+                <p style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: #0066ff;">
+                    SMALL SATELLITE PLATFORM
+                </p>
+            </div>
+        </section>
+
+        <!-- Navigation Component -->
+        <section class="section">
+            <h2 class="section-title">Navigation</h2>
+            <p class="section-description">Fixed navigation with glass-morphism effect</p>
+
+            <div class="layout-mockup">
+                <div class="mockup-label">Navigation Bar</div>
+                <div class="nav-mockup">
+                    <div class="nav-logo">TITAN</div>
+                    <ul class="nav-links">
+                        <li><a href="#" class="nav-link active">Home</a></li>
+                        <li><a href="#" class="nav-link">Mission</a></li>
+                        <li><a href="#" class="nav-link">Products</a></li>
+                        <li><a href="#" class="nav-link">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hero Section Mockup -->
+        <section class="section">
+            <h2 class="section-title">Landing Page Hero</h2>
+            <p class="section-description">Full-screen hero with gradient background (video/image will be added)</p>
+
+            <div class="layout-mockup">
+                <div class="mockup-label">Hero Section (Full Viewport Height)</div>
+                <div class="hero-mockup">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Building the Future in Orbit</h1>
+                        <p class="hero-subtitle">Next-generation satellite systems for Earth and beyond</p>
+                        <a href="#" class="btn-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Capability Cards -->
+        <section class="section">
+            <h2 class="section-title">Capability Cards</h2>
+            <p class="section-description">Three-column grid showcasing core competencies</p>
+
+            <div class="component-grid">
+                <div class="component-card">
+                    <div class="component-icon">
+                        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M32 8L8 20l24 12 24-12-24-12z"/>
+                            <path d="M8 44l24 12 24-12"/>
+                            <path d="M8 32l24 12 24-12"/>
+                        </svg>
+                    </div>
+                    <h3>Design</h3>
+                    <p>Advanced satellite architecture engineered for performance and reliability</p>
+                </div>
+
+                <div class="component-card">
+                    <div class="component-icon">
+                        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="32" cy="32" r="24"/>
+                            <path d="M32 16v16l12 6"/>
+                        </svg>
+                    </div>
+                    <h3>Build</h3>
+                    <p>Precision manufacturing with aerospace-grade materials and processes</p>
+                </div>
+
+                <div class="component-card">
+                    <div class="component-icon">
+                        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="32" cy="32" r="8"/>
+                            <path d="M32 4v16m0 24v16M4 32h16m24 0h16"/>
+                        </svg>
+                    </div>
+                    <h3>Operate</h3>
+                    <p>24/7 mission control and satellite fleet management</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="section">
+            <h2 class="section-title">Statistics</h2>
+            <p class="section-description">Animated counters highlighting key metrics</p>
+
+            <div class="layout-mockup">
+                <div class="mockup-label">Stats Grid</div>
+                <div class="layout-content">
+                    <div class="stats-grid">
+                        <div>
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Satellites Deployed</div>
+                        </div>
+                        <div>
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                        <div>
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Operations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Cards -->
+        <section class="section">
+            <h2 class="section-title">Product Cards</h2>
+            <p class="section-description">Satellite platform showcases with hover effects</p>
+
+            <div class="component-grid">
+                <div class="product-card-mockup">
+                    <div class="product-image-mockup">TITAN-1</div>
+                    <div class="product-info-mockup">
+                        <div class="product-category">Small Satellite Platform</div>
+                        <h3>TITAN-1 Series</h3>
+                        <p style="color: #a0a0a0;">Compact, cost-effective solution for LEO missions</p>
+                        <div class="product-specs">
+                            Mass: 50-150 kg • Power: Up to 500W • Mission Life: 5+ years
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card-mockup">
+                    <div class="product-image-mockup">TITAN-X</div>
+                    <div class="product-info-mockup">
+                        <div class="product-category">Medium Satellite Platform</div>
+                        <h3>TITAN-X Series</h3>
+                        <p style="color: #a0a0a0;">High-performance platform for complex missions</p>
+                        <div class="product-specs">
+                            Mass: 150-500 kg • Power: Up to 2kW • Mission Life: 10+ years
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responsive Design -->
+        <section class="section">
+            <h2 class="section-title">Responsive Design</h2>
+            <p class="section-description">Mobile-first approach with breakpoints at 768px and 1024px</p>
+
+            <div class="responsive-grid">
+                <div class="device-mockup">
+                    <div class="device-label">Desktop (1400px+)</div>
+                    <div class="device-frame">
+                        <div style="margin-bottom: 1rem;">✓ Full navigation menu</div>
+                        <div style="margin-bottom: 1rem;">✓ Multi-column grid layouts</div>
+                        <div style="margin-bottom: 1rem;">✓ Large hero typography</div>
+                        <div>✓ Hover effects and animations</div>
+                    </div>
+                </div>
+
+                <div class="device-mockup">
+                    <div class="device-label">Mobile (< 768px)</div>
+                    <div class="device-frame">
+                        <div style="margin-bottom: 1rem;">✓ Hamburger menu</div>
+                        <div style="margin-bottom: 1rem;">✓ Single column layouts</div>
+                        <div style="margin-bottom: 1rem;">✓ Fluid typography scaling</div>
+                        <div>✓ Touch-optimized interactions</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Principles -->
+        <section class="section">
+            <h2 class="section-title">Design Principles</h2>
+
+            <div class="component-grid">
+                <div class="component-card">
+                    <h3>Visual First</h3>
+                    <p>Large, impactful imagery with minimal text overlay. Let visuals tell the story.</p>
+                </div>
+
+                <div class="component-card">
+                    <h3>High Contrast</h3>
+                    <p>Pure black backgrounds with white text and strategic blue accents for maximum readability.</p>
+                </div>
+
+                <div class="component-card">
+                    <h3>Generous Spacing</h3>
+                    <p>Abundant whitespace creates breathing room and emphasizes key content.</p>
+                </div>
+
+                <div class="component-card">
+                    <h3>Smooth Animations</h3>
+                    <p>Subtle fade-in effects and hover states enhance user experience without distraction.</p>
+                </div>
+
+                <div class="component-card">
+                    <h3>Performance Focus</h3>
+                    <p>Optimized CSS, lazy-loaded animations, and minimal JavaScript for fast load times.</p>
+                </div>
+
+                <div class="component-card">
+                    <h3>Mobile Responsive</h3>
+                    <p>Fluid layouts that adapt seamlessly from mobile to desktop viewports.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page Structure Overview -->
+        <section class="section">
+            <h2 class="section-title">Page Structure</h2>
+
+            <div style="background: #141414; padding: 2rem; border: 1px solid #1a1a1a; border-radius: 4px;">
+                <h3 style="margin-bottom: 1.5rem; color: #0066ff;">Landing Page (index.html)</h3>
+                <ul style="list-style: none; color: #a0a0a0; line-height: 2;">
+                    <li>→ Full-screen hero with satellite imagery</li>
+                    <li>→ Capabilities grid (Design, Build, Operate)</li>
+                    <li>→ Statistics section with animated counters</li>
+                    <li>→ Call-to-action</li>
+                </ul>
+
+                <h3 style="margin: 2rem 0 1.5rem; color: #0066ff;">Mission Page (mission.html)</h3>
+                <ul style="list-style: none; color: #a0a0a0; line-height: 2;">
+                    <li>→ Page hero with mission statement</li>
+                    <li>→ Vision section</li>
+                    <li>→ Core capabilities breakdown</li>
+                    <li>→ Differentiators</li>
+                </ul>
+
+                <h3 style="margin: 2rem 0 1.5rem; color: #0066ff;">Products Page (products.html)</h3>
+                <ul style="list-style: none; color: #a0a0a0; line-height: 2;">
+                    <li>→ Page hero</li>
+                    <li>→ Satellite platforms (TITAN-1, TITAN-X, TITAN-PRO)</li>
+                    <li>→ Services grid</li>
+                    <li>→ Custom solution CTA</li>
+                </ul>
+
+                <h3 style="margin: 2rem 0 1.5rem; color: #0066ff;">Contact Page (contact.html)</h3>
+                <ul style="list-style: none; color: #a0a0a0; line-height: 2;">
+                    <li>→ Page hero</li>
+                    <li>→ Contact form</li>
+                    <li>→ Office information and contact details</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 3rem 0; border-top: 1px solid #1a1a1a; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">TITAN SPACE</h2>
+            <p style="color: #666;">Design Mockup • Copyright © 2024 Titan Space Ltd</p>
+            <p style="color: #666; margin-top: 0.5rem; font-size: 0.875rem;">
+                This mockup demonstrates the visual design system and component library
+            </p>
+        </div>
+    </div>
+</body>
+</html>
