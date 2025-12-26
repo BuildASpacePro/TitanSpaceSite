@@ -2,6 +2,25 @@
 // Handles navigation, animations, and interactions
 
 // ===================================
+// Expandable Capability Cards
+// ===================================
+const expandableCards = document.querySelectorAll('[data-expandable]');
+
+expandableCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Close all other cards
+        expandableCards.forEach(otherCard => {
+            if (otherCard !== card) {
+                otherCard.classList.remove('expanded');
+            }
+        });
+
+        // Toggle current card
+        card.classList.toggle('expanded');
+    });
+});
+
+// ===================================
 // Navigation Toggle (Mobile)
 // ===================================
 const navToggle = document.querySelector('.nav-toggle');
