@@ -1,0 +1,265 @@
+/* Entry Page - Human/Agent Selection Screen */
+
+/* Import the same design system variables from main.css */
+:root {
+    /* Colors matching main design system */
+    --color-background: #000000;
+    --color-surface: #0a0a0a;
+    --color-surface-elevated: #141414;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #a0a0a0;
+    --color-text-tertiary: #666666;
+    --color-accent: #0066ff;
+    --color-accent-hover: #0052cc;
+    --color-border: #1a1a1a;
+
+    /* Typography */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+
+    /* Spacing */
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 300ms ease;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Completely blank background - pure black screen */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Full screen container - centered content */
+.entry-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--color-background);
+}
+
+/* Wrapper for the two buttons */
+.selection-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+/* Shared button styles */
+.selection-button {
+    min-width: 300px;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-family: var(--font-family);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    background: transparent;
+    border: 2px solid var(--color-accent);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Button hover effect */
+.selection-button:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+}
+
+/* Button active state */
+.selection-button:active {
+    transform: translateY(0);
+}
+
+/* Focus state for accessibility */
+.selection-button:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+}
+
+/* Subtle differentiation between buttons (optional) */
+.human-button {
+    /* Primary button - uses default accent color */
+}
+
+.agent-button {
+    /* Secondary button - slightly different styling */
+    border-color: var(--color-text-secondary);
+}
+
+.agent-button:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+}
+
+/* Modal for agent instructions */
+.agent-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Show modal when active */
+.agent-modal.active {
+    display: flex;
+}
+
+/* Modal content container */
+.modal-content {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-xl);
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-content h2 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+}
+
+.modal-content p {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* URL display box */
+.url-display {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.url-display code {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-size-base);
+    color: var(--color-accent);
+    word-break: break-all;
+    text-align: left;
+}
+
+/* Copy button */
+.copy-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-family: var(--font-family);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    background: var(--color-accent);
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    white-space: nowrap;
+}
+
+.copy-button:hover {
+    background: var(--color-accent-hover);
+}
+
+.copy-button:active {
+    transform: scale(0.98);
+}
+
+/* Close button */
+.close-button {
+    padding: var(--spacing-sm) var(--spacing-xl);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    background: transparent;
+    border: 2px solid var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.close-button:hover {
+    border-color: var(--color-text-primary);
+    background: var(--color-surface);
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .selection-button {
+        min-width: 250px;
+        font-size: var(--font-size-lg);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: var(--spacing-lg);
+    }
+
+    .url-display {
+        flex-direction: column;
+    }
+
+    .url-display code {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .selection-button {
+        min-width: 200px;
+        font-size: var(--font-size-base);
+    }
+
+    .modal-content h2 {
+        font-size: var(--font-size-xl);
+    }
+}

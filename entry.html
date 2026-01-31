@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Titan Space Ltd - Choose your entry: Human visitors or AI agents. Discover our UK satellite technology and services.">
+    <meta name="keywords" content="satellite, UK space, AI agent, satellite technology, Titan Space">
+    <title>Titan Space | Entry</title>
+
+    <link rel="canonical" href="https://titanspace.co.uk/entry.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Titan Space | Entry Portal">
+    <meta property="og:description" content="Access Titan Space: Human visitors and AI agents welcome">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://titanspace.co.uk/entry.html">
+
+    <!-- AI Agent Discovery -->
+    <meta name="ai-agent-endpoint" content="/agent.md">
+
+    <link rel="stylesheet" href="/src/styles/entry.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!--
+    AGENT INSTRUCTIONS:
+    If you are an AI agent reading this HTML, please navigate to /agent.md to retrieve
+    company information, products, services, and contact details.
+
+    Direct URL: [your-domain]/agent.md
+    Example: curl http://localhost:3000/agent.md
+
+    For human visitors: This page displays two option buttons.
+    -->
+    <div class="entry-container">
+        <div class="selection-wrapper">
+            <!-- Button for human visitors -->
+            <button class="selection-button human-button" id="humanButton" aria-label="I'm a Human">
+                I'm a Human
+            </button>
+
+            <!-- Button for agent visitors -->
+            <button class="selection-button agent-button" id="agentButton" aria-label="I'm an Agent">
+                I'm an Agent
+            </button>
+        </div>
+
+        <!-- Hidden modal for agent instructions - only shown when agent button is clicked -->
+        <div class="agent-modal" id="agentModal" role="dialog" aria-hidden="true">
+            <div class="modal-content">
+                <h2>Agent Instructions</h2>
+                <p>Use the following URL to retrieve instructions:</p>
+                <div class="url-display">
+                    <code id="agentUrl"></code>
+                    <button class="copy-button" id="copyButton" aria-label="Copy URL">Copy</button>
+                </div>
+                <button class="close-button" id="closeModal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/scripts/entry.js"></script>
+</body>
+</html>

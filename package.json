@@ -1,7 +1,7 @@
 {
   "name": "titan-space-website",
   "version": "1.0.0",
-  "description": "Official website for Titan Space Ltd - Satellite Design, Build, and Operations",
+  "description": "Official site for Titan Space Ltd - Satellite Design, Build and Operations",
   "type": "module",
   "scripts": {
     "dev": "vite",

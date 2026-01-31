@@ -1,0 +1,11 @@
+{
+  "schema_version": "v1",
+  "name_for_ai": "Titan Space",
+  "description_for_ai": "UK satellite technology company offering satellite design, manufacturing, and operations software. Products include Simulation Software for mission planning and Mission Control platform with AI-assisted operations via MCP.",
+  "contact_email": "info@titanspace.co.uk",
+  "legal_info_url": "https://titanspace.co.uk/terms.html",
+  "agent_endpoint": {
+    "url": "https://titanspace.co.uk/agent.md",
+    "description": "Comprehensive company information, products, services, and contact details in markdown format"
+  }
+}
