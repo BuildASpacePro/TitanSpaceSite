@@ -44,6 +44,10 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
+}
+
+/* Hide overflow only when entry screen is visible */
+body:has(#entryScreen:not([style*="display: none"])) {
     overflow: hidden;
 }
 
@@ -63,6 +67,14 @@ body {
     height: 100vh;
     width: 100vw;
     background-color: var(--color-background);
+    transition: opacity var(--transition-base);
+    opacity: 1;
+}
+
+/* Main content starts hidden, fades in when shown */
+#mainContent {
+    opacity: 0;
+    transition: opacity var(--transition-base);
 }
 
 /* Wrapper for the two buttons */
