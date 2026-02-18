@@ -701,6 +701,21 @@ h4 { font-size: var(--font-size-xl); }
     margin-bottom: var(--spacing-2xl);
 }
 
+/* Email button wrapper - centers the button */
+.contact-email-box {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-xl);
+}
+
+/* Description text above email button */
+.contact-description {
+    text-align: center;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
 .contact-email a {
     color: var(--color-accent);
     transition: color var(--transition-fast);

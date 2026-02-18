@@ -131,4 +131,4 @@ The development server will start at `http://localhost:3000`
 
 ## License
 
-Copyright © 2024 Titan Space Ltd. All rights reserved.
+Copyright © 2026 Titan Space Ltd. All rights reserved.
