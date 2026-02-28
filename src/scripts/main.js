@@ -42,6 +42,27 @@ if (navToggle) {
     });
 }
 
+// ===================================
+// Dropdown Navigation Handling
+// ===================================
+// Handle dropdown clicks on mobile to toggle visibility
+const navDropdown = document.querySelector('.nav-dropdown');
+if (navDropdown) {
+    const dropdownToggle = navDropdown.querySelector('.nav-link');
+
+    // On mobile, clicking the dropdown link toggles the menu instead of navigating
+    dropdownToggle.addEventListener('click', (e) => {
+        // Only prevent default on mobile when menu is visible
+        if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
+            e.preventDefault();
+            const dropdownMenu = navDropdown.querySelector('.dropdown-menu');
+
+            // Toggle visibility class for mobile
+            dropdownMenu.classList.toggle('mobile-visible');
+        }
+    });
+}
+
 // Close mobile menu when clicking a link
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {

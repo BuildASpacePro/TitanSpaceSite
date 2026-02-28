@@ -34,7 +34,14 @@
             <a href="/" class="logo">TITAN SPACE</a>
             <ul class="nav-menu">
                 <li><a href="/" class="nav-link">Home</a></li>
-                <li><a href="/mission.html" class="nav-link active">Mission</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link active">Company</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/mission.html" class="dropdown-link">Mission</a></li>
+                        <li><a href="/careers.html" class="dropdown-link">Careers</a></li>
+                        <li><a href="/updates.html" class="dropdown-link">Updates</a></li>
+                    </ul>
+                </li>
                 <li><a href="/products.html" class="nav-link">Products</a></li>
                 <li><a href="/contact.html" class="nav-link">Contact</a></li>
             </ul>
@@ -46,76 +53,54 @@
         </div>
     </nav>
 
-    <!-- Mission Hero -->
-    <section class="page-hero">
-        <div class="hero-background">
-            <div class="hero-overlay"></div>
+    <!-- Mission Hero - Star Trails -->
+    <section class="mission-hero">
+        <div class="mission-hero-background">
+            <img src="/assets/images/startrails.jpg" alt="Star Trails" class="mission-hero-image">
+            <div class="mission-hero-overlay"></div>
         </div>
-        <div class="hero-content">
-            <h1 class="page-title">The Mission</h1>
-            <p class="page-subtitle">Empowering the UK to design, build and operate satellites with unprecedented speed and affordability</p>
+        <div class="mission-hero-content">
+            <h1 class="mission-hero-title">Building the next generation of satellites</h1>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
         </div>
     </section>
 
-    <!-- Vision Section -->
-    <section class="vision">
+    <!-- Mission Statement Section -->
+    <section class="mission-statement">
         <div class="container">
-            <div class="content-block">
-                <h2>Vision</h2>
-                <p class="large-text">
-                    To establish full vertical integration of satellite product generation in the UK,
-                    making it possible for university students and institutions to design, build and
-                    operate satellites quickly and affordably. We are building a sovereign British
-                    space capability that reduces development time and costs while maintaining
-                    world-class quality.
+            <div class="mission-statement-content">
+                <p class="mission-large-text">
+                    Designed for mass production. Providing global infrastructure. Faster and better than ever before.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Core Capabilities -->
-    <section class="core-capabilities">
-        <div class="container">
-            <h2 class="section-title">Our Approach</h2>
-            <div class="capabilities-list">
-                <div class="capability-item">
-                    <h3>British-Built Excellence</h3>
-                    <p>All products designed and manufactured in the UK, supporting British engineering and innovation</p>
-                </div>
-                <div class="capability-item">
-                    <h3>Accelerated Development</h3>
-                    <p>Dramatically reduced time from concept to orbit through streamlined processes and modern tooling</p>
-                </div>
-                <div class="capability-item">
-                    <h3>Cost Reduction</h3>
-                    <p>Making satellite technology accessible through innovative design and efficient manufacturing</p>
-                </div>
-                <div class="capability-item">
-                    <h3>Educational Empowerment</h3>
-                    <p>Enabling university students to gain hands-on experience in real satellite missions</p>
-                </div>
-            </div>
+    <!-- Moon Hero Section -->
+    <section class="mission-hero mission-hero-secondary">
+        <div class="mission-hero-background">
+            <img src="/assets/images/moon.jpg" alt="Waning Crescent Moon" class="mission-hero-image">
+            <div class="mission-hero-overlay"></div>
         </div>
     </section>
 
-    <!-- What Sets Us Apart -->
-    <section class="differentiators">
-        <div class="container">
-            <h2 class="section-title">What Sets Us Apart</h2>
-            <div class="diff-grid">
-                <div class="diff-card">
-                    <h3>Full UK Vertical Integration</h3>
-                    <p>Complete sovereign capability from component design through manufacture, assembly, testing, launch and operations</p>
-                </div>
-                <div class="diff-card">
-                    <h3>Student-First Design</h3>
-                    <p>Products and platforms engineered to be accessible for university teams, fostering the next generation of space engineers</p>
-                </div>
-                <div class="diff-card">
-                    <h3>Speed and Affordability</h3>
-                    <p>Reducing barriers to space access through rapid development cycles and cost-effective solutions without compromising quality</p>
-                </div>
-            </div>
+    <!-- Vision Section - Full Width -->
+    <section class="mission-vision-full">
+        <div class="mission-vision-content">
+            <h2>Why Titan Space</h2>
+            <p>
+                Over the next 5 years, we bet we'll out perform competitors for three reasons:
+            </p>
+            <ul class="mission-reasons-simple">
+                <li>Satellite design optimised for mass production and deployment. Designed and manufactured in months, not years</li>
+                <li>LLM integration - engineers are able to build 10x as much as before in less time</li>
+                <li>Vertical Integration - full control over the supply chain. British designed and built</li>
+            </ul>
+            <p>
+                This is a once in a generation opportunity to define UK industry.
+            </p>
         </div>
     </section>
 
@@ -145,6 +130,7 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2026 Titan Space Ltd. All rights reserved.</p>
+                <p class="photo-credit">Photography: Don Pettit / NASA</p>
             </div>
         </div>
     </footer>

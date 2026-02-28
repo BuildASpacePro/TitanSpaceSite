@@ -149,6 +149,11 @@ h4 { font-size: var(--font-size-xl); }
     align-items: center;
 }
 
+/* Dropdown navigation item container */
+.nav-dropdown {
+    position: relative;
+}
+
 .nav-link {
     font-size: var(--font-size-sm);
     font-weight: 500;
@@ -161,6 +166,48 @@ h4 { font-size: var(--font-size-xl); }
 .nav-link:hover,
 .nav-link.active {
     color: var(--color-text-primary);
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 1.5rem;
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-border);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-base), visibility var(--transition-base), margin-top var(--transition-base);
+    padding: var(--spacing-sm) 0;
+}
+
+/* Show dropdown on hover */
+.nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 1rem;
+}
+
+/* Dropdown links */
+.dropdown-link {
+    display: block;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast), background var(--transition-fast);
+    white-space: nowrap;
+}
+
+.dropdown-link:hover {
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .nav-toggle {
@@ -197,6 +244,14 @@ h4 { font-size: var(--font-size-xl); }
     bottom: 0;
     background: linear-gradient(135deg, #000814 0%, #001d3d 100%);
     z-index: 1;
+}
+
+/* Hero background image */
+.hero-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .hero-overlay {
@@ -630,6 +685,111 @@ h4 { font-size: var(--font-size-xl); }
     background: var(--color-background);
 }
 
+/* === Updates Page === */
+.updates-section {
+    padding: var(--spacing-3xl) 0;
+    background: var(--color-background);
+}
+
+/* Individual update item */
+.update-item {
+    max-width: 900px;
+    margin: 0 auto var(--spacing-3xl) auto;
+    padding-bottom: var(--spacing-3xl);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.update-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Update header with date and tag */
+.update-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.update-date {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.update-tag {
+    font-size: var(--font-size-sm);
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.update-tag:hover {
+    color: var(--color-accent-hover);
+}
+
+/* Update title */
+.update-title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-primary);
+}
+
+/* Update content */
+.update-content p {
+    font-size: var(--font-size-lg);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.update-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Update content lists */
+.update-list {
+    list-style: decimal;
+    margin: var(--spacing-lg) 0;
+    padding-left: var(--spacing-xl);
+}
+
+.update-list li {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+}
+
+/* Links in update content */
+.update-content a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.update-content a:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+}
+
+/* Smooth scroll to tagged updates */
+.update-item:target {
+    animation: highlightUpdate 2s ease;
+}
+
+@keyframes highlightUpdate {
+    0% {
+        background: rgba(0, 102, 255, 0.1);
+    }
+    100% {
+        background: transparent;
+    }
+}
+
 /* === Coming Soon === */
 .coming-soon-section {
     margin-top: var(--spacing-3xl);
@@ -644,6 +804,33 @@ h4 { font-size: var(--font-size-xl); }
     color: var(--color-text-secondary);
     max-width: 600px;
     margin: 0 auto;
+}
+
+/* Full page coming soon (for Careers and Updates pages) */
+.coming-soon-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background);
+    padding: var(--spacing-lg);
+}
+
+.coming-soon-content {
+    text-align: center;
+    max-width: 600px;
+}
+
+.coming-soon-content h1 {
+    font-size: var(--font-size-4xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+}
+
+.coming-soon-content p {
+    font-size: var(--font-size-xl);
+    color: var(--color-text-secondary);
+    font-weight: 300;
 }
 
 /* === Services === */
@@ -899,6 +1086,14 @@ h4 { font-size: var(--font-size-xl); }
     color: var(--color-text-tertiary);
 }
 
+/* Photo credit styling */
+.photo-credit {
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    opacity: 0.6;
+}
+
 /* === Animations === */
 @keyframes fadeInUp {
     from {
@@ -925,6 +1120,245 @@ h4 { font-size: var(--font-size-xl); }
     }
 }
 
+/* === Mission Page - SpaceX Inspired === */
+
+/* Full-screen hero with moon image */
+.mission-hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Background container for the moon image */
+.mission-hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+/* Moon image - full screen cover */
+.mission-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Dark overlay for readability */
+.mission-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+/* Lower overlay for moon image to avoid obscuring horizon */
+.mission-hero-secondary .mission-hero-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Hero content positioning */
+.mission-hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 1200px;
+    padding: 0 var(--spacing-lg);
+}
+
+/* Large hero title - smaller size for readability */
+.mission-hero-title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 600;
+    margin-bottom: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    animation: fadeInUp 1s ease;
+}
+
+/* Secondary hero section (moon image) - no content, just visual */
+.mission-hero-secondary {
+    height: 60vh;
+    min-height: 500px;
+}
+
+.mission-hero-secondary .mission-hero-content {
+    display: none;
+}
+
+.mission-hero-secondary .scroll-indicator {
+    display: none;
+}
+
+/* Mission statement section */
+.mission-statement {
+    padding: var(--spacing-3xl) 0;
+    background: var(--color-background);
+}
+
+/* Center the mission statement content */
+.mission-statement-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.mission-statement-content h2 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Large text styling for mission statement */
+.mission-large-text {
+    font-size: var(--font-size-2xl);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    font-weight: 300;
+}
+
+/* Mission values grid section */
+.mission-values {
+    padding: var(--spacing-3xl) 0;
+    background: var(--color-surface);
+}
+
+/* Grid layout for mission values */
+.mission-values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-2xl);
+}
+
+/* Individual mission value item */
+.mission-value-item {
+    padding: var(--spacing-xl);
+    border-left: 2px solid var(--color-accent);
+    transition: transform var(--transition-base);
+}
+
+.mission-value-item:hover {
+    transform: translateX(8px);
+}
+
+/* Large number indicator for each value */
+.mission-value-number {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--color-accent);
+    opacity: 0.3;
+    margin-bottom: var(--spacing-md);
+    line-height: 1;
+}
+
+.mission-value-item h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.mission-value-item p {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+}
+
+/* Full-width vision section */
+.mission-vision-full {
+    padding: var(--spacing-3xl) 0;
+    background: var(--color-background);
+}
+
+/* Center and constrain vision content */
+.mission-vision-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    text-align: center;
+}
+
+.mission-vision-content h2 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.mission-vision-content p {
+    font-size: var(--font-size-lg);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.mission-vision-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Styled ordered list for mission reasons */
+.mission-reasons {
+    list-style: none;
+    counter-reset: mission-counter;
+    margin: var(--spacing-2xl) 0;
+    padding: 0;
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mission-reasons li {
+    counter-increment: mission-counter;
+    position: relative;
+    padding-left: var(--spacing-2xl);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+}
+
+.mission-reasons li::before {
+    content: counter(mission-counter) ")";
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.mission-reasons li strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+/* Closing statement styling */
+.mission-closing {
+    margin-top: var(--spacing-2xl);
+    font-size: var(--font-size-xl);
+    font-weight: 400;
+}
+
+/* Simple bullet list for mission reasons */
+.mission-reasons-simple {
+    list-style: disc;
+    margin: var(--spacing-xl) 0;
+    padding-left: var(--spacing-xl);
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mission-reasons-simple li {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+}
+
 /* === Responsive Design === */
 @media (max-width: 1024px) {
     :root {
@@ -934,6 +1368,23 @@ h4 { font-size: var(--font-size-xl); }
 
     .contact-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Adjust mission hero title for tablets */
+    .mission-hero-title {
+        font-size: clamp(1.75rem, 5vw, 3rem);
+    }
+
+    /* Adjust secondary hero height for tablets */
+    .mission-hero-secondary {
+        height: 50vh;
+        min-height: 400px;
+    }
+
+    /* Adjust mission values grid for tablets */
+    .mission-values-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
     }
 }
 
@@ -960,12 +1411,51 @@ h4 { font-size: var(--font-size-xl); }
         display: flex;
     }
 
+    /* Mobile dropdown adjustments */
+    .dropdown-menu {
+        position: static;
+        transform: none;
+        margin-top: var(--spacing-sm);
+        opacity: 1;
+        visibility: visible;
+        background: rgba(20, 20, 20, 0.8);
+        border-left: 2px solid var(--color-accent);
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+    }
+
+    .dropdown-link {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-xs);
+    }
+
     .capabilities-grid,
     .product-grid {
         grid-template-columns: 1fr;
     }
 
     .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust mission hero for mobile */
+    .mission-hero-title {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
+
+    /* Adjust secondary hero for mobile */
+    .mission-hero-secondary {
+        height: 40vh;
+        min-height: 300px;
+    }
+
+    .mission-large-text {
+        font-size: var(--font-size-lg);
+    }
+
+    /* Stack mission values on mobile */
+    .mission-values-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -978,5 +1468,18 @@ h4 { font-size: var(--font-size-xl); }
 
     .container {
         padding: 0 var(--spacing-sm);
+    }
+
+    /* Further adjustments for small mobile screens */
+    .mission-value-number {
+        font-size: var(--font-size-2xl);
+    }
+
+    .mission-value-item {
+        padding: var(--spacing-md);
+    }
+
+    .mission-vision-content h2 {
+        font-size: var(--font-size-2xl);
     }
 }
