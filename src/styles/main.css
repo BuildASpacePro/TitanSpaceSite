@@ -895,6 +895,15 @@ h4 { font-size: var(--font-size-xl); }
     margin-top: var(--spacing-xl);
 }
 
+/* Email Octopus signup form wrapper - ensures the embed is centered */
+.email-signup-form {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: var(--spacing-xl);
+}
+
 /* Description text above email button */
 .contact-description {
     text-align: center;
