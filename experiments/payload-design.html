@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile-first viewport; viewport-fit=cover pads for the iPhone home indicator -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Buy Bespoke Payload Design | Titan Space</title>
+
+    <!-- Reuse the production design system -->
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== Design C: storefront card with a slide-up bottom sheet ===== */
+
+        .checkout {
+            padding: calc(var(--nav-height) + var(--spacing-2xl)) var(--spacing-lg) var(--spacing-2xl);
+            max-width: 560px;
+            margin: 0 auto;
+        }
+        .sandbox-flag {
+            display: inline-block;
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-tertiary);
+            border: 1px solid var(--color-border);
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Product card */
+        .product-card-exp {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .product-mark {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface-elevated);
+            color: var(--color-accent);
+            font-weight: 700;
+            font-size: var(--font-size-2xl);
+            letter-spacing: 0.1em;
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+        .product-body { padding: var(--spacing-lg); }
+        .product-body h1 { font-size: var(--font-size-2xl); margin-bottom: var(--spacing-sm); }
+        .product-body .blurb { color: var(--color-text-secondary); margin-bottom: var(--spacing-lg); }
+        .product-specs { margin-bottom: var(--spacing-lg); }
+        .product-specs li { color: var(--color-text-secondary); padding: 0.4rem 0; border-bottom: 1px solid var(--color-border); }
+        .price-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--spacing-lg); }
+        .price-row .amount { font-size: var(--font-size-2xl); font-weight: 700; }
+        .price-row .note { color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
+
+        /* The Buy button that opens the bottom sheet (matches site accent) */
+        .buy-btn {
+            width: 100%;
+            height: 54px;
+            background: var(--color-accent);
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: background var(--transition-fast);
+        }
+        .buy-btn:active { background: var(--color-accent-hover); }
+
+        /* ===== Bottom sheet (in-page order summary) ===== */
+        .sheet-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: flex-end; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity var(--transition-base);
+            z-index: 1000;
+        }
+        .sheet-overlay.open { opacity: 1; pointer-events: auto; }
+        .sheet {
+            width: 100%; max-width: 480px;
+            background: var(--color-surface-elevated);
+            color: var(--color-text-primary);
+            border-radius: 16px 16px 0 0;
+            padding: var(--spacing-md) var(--spacing-lg) calc(var(--spacing-lg) + env(safe-area-inset-bottom));
+            transform: translateY(100%);
+            transition: transform var(--transition-base);
+        }
+        .sheet-overlay.open .sheet { transform: translateY(0); }
+        /* Grab handle at the top of the sheet */
+        .sheet-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--color-text-tertiary); margin: 0 auto var(--spacing-md); }
+        .sheet h2 { font-size: var(--font-size-xl); margin-bottom: var(--spacing-md); }
+
+        /* Order summary rows */
+        .sum-row { display: flex; justify-content: space-between; padding: var(--spacing-md) 0; border-bottom: 1px solid var(--color-border); }
+        .sum-row .label { color: var(--color-text-secondary); }
+        .sum-row.total { font-weight: 700; font-size: var(--font-size-lg); border-bottom: 0; }
+
+        /* Apple Pay button (custom fallback by default) */
+        .apple-pay-button {
+            -webkit-appearance: none;
+            appearance: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            height: 54px;
+            margin-top: var(--spacing-md);
+            background: #000;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 8px;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        .apple-pay-button .ap-logo { width: 20px; height: 20px; fill: #fff; }
+        @supports (-webkit-appearance: -apple-pay-button) {
+            .apple-pay-button {
+                -webkit-appearance: -apple-pay-button;
+                -apple-pay-button-type: buy;
+                -apple-pay-button-style: black;
+                border: 0;
+            }
+            .apple-pay-button .ap-fallback { display: none; }
+        }
+        .ap-hint { text-align: center; color: var(--color-text-tertiary); font-size: var(--font-size-sm); margin-top: var(--spacing-sm); }
+
+        /* Processing + success states reuse the sheet body */
+        .pay-state { display: none; text-align: center; padding: var(--spacing-lg) 0; }
+        .pay-state.active { display: block; }
+        .ap-spinner { width: 44px; height: 44px; margin: 0 auto var(--spacing-md); border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--color-text-primary); border-radius: 50%; animation: ap-spin 0.8s linear infinite; }
+        @keyframes ap-spin { to { transform: rotate(360deg); } }
+        .ap-tick { width: 56px; height: 56px; margin: 0 auto var(--spacing-md); stroke: #30d158; }
+        .ap-success-title { font-weight: 600; }
+        /* The Done button reuses the Apple Pay button shape but the site accent colour */
+        .done-btn { background: var(--color-accent) !important; border: 0 !important; }
+
+        /* Minimal nav */
+        .exp-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+            background: rgba(0,0,0,0.85); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border); z-index: 100;
+        }
+        .exp-nav .logo { font-weight: 700; letter-spacing: 0.1em; }
+        .exp-nav a.back { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+    </style>
+</head>
+<body>
+    <!-- Lightweight nav -->
+    <nav class="exp-nav">
+        <span class="logo">TITAN SPACE</span>
+        <a class="back" href="/products.html">Back to products</a>
+    </nav>
+
+    <main class="checkout">
+        <span class="sandbox-flag">Experimental - mock checkout</span>
+
+        <!-- Product card -->
+        <div class="product-card-exp">
+            <div class="product-mark">BESPOKE PAYLOAD DESIGN</div>
+            <div class="product-body">
+                <h1>Bespoke Satellite Payload Design</h1>
+                <p class="blurb">A custom payload engineered to your mission - from concept and trade studies to a flight-ready design package.</p>
+                <ul class="product-specs">
+                    <li>Mission and requirements capture</li>
+                    <li>Optical / RF / sensor payload options</li>
+                    <li>Thermal, power and data budgets</li>
+                    <li>Design package and interface control documents</li>
+                </ul>
+                <div class="price-row">
+                    <span class="amount">GBP 75,000</span>
+                    <span class="note">engagement deposit</span>
+                </div>
+                <!-- Opens the bottom sheet -->
+                <button type="button" class="buy-btn" id="buyButton">Buy now</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom sheet: order summary then Apple Pay then success -->
+    <div class="sheet-overlay" id="sheetOverlay">
+        <div class="sheet" role="dialog" aria-modal="true" aria-label="Checkout">
+            <div class="sheet-handle"></div>
+
+            <!-- Stage 1: order summary with Apple Pay button -->
+            <div class="pay-state active" id="stSummary">
+                <h2>Order summary</h2>
+                <div class="sum-row"><span class="label">Bespoke Payload Design</span><span>GBP 75,000.00</span></div>
+                <div class="sum-row"><span class="label">VAT (20%)</span><span>GBP 15,000.00</span></div>
+                <div class="sum-row total"><span>Total</span><span>GBP 90,000.00</span></div>
+
+                <button type="button" class="apple-pay-button" id="payButton" aria-label="Pay with Apple Pay">
+                    <span class="ap-fallback" aria-hidden="true">
+                        <svg class="ap-logo" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        Pay
+                    </span>
+                </button>
+                <p class="ap-hint">This is a simulation. No card is charged.</p>
+            </div>
+
+            <!-- Stage 2: processing -->
+            <div class="pay-state" id="stProcessing">
+                <div class="ap-spinner"></div>
+                <p>Processing...</p>
+            </div>
+
+            <!-- Stage 3: success -->
+            <div class="pay-state" id="stSuccess">
+                <svg class="ap-tick" viewBox="0 0 52 52" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="26" r="24"/><path d="M16 27l7 7 13-14"/></svg>
+                <p class="ap-success-title">Payment complete</p>
+                <p class="ap-hint">Thank you. Our team would be in touch to start your design.</p>
+                <button type="button" class="apple-pay-button done-btn" id="doneButton">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Bottom-sheet checkout flow =====
+        const overlay = document.getElementById('sheetOverlay');
+        const stSummary = document.getElementById('stSummary');
+        const stProcessing = document.getElementById('stProcessing');
+        const stSuccess = document.getElementById('stSuccess');
+
+        // Show only the requested stage inside the sheet
+        function showStage(active) {
+            [stSummary, stProcessing, stSuccess].forEach(s => s.classList.remove('active'));
+            active.classList.add('active');
+        }
+
+        // Buy opens the sheet at the order summary stage
+        document.getElementById('buyButton').addEventListener('click', () => {
+            showStage(stSummary);
+            overlay.classList.add('open');
+        });
+
+        // Close by tapping the dimmed backdrop
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+        // Apple Pay -> processing -> success (mocked)
+        document.getElementById('payButton').addEventListener('click', () => {
+            showStage(stProcessing);
+            setTimeout(() => showStage(stSuccess), 1600);
+        });
+
+        // Done closes the sheet
+        document.getElementById('doneButton').addEventListener('click', () => overlay.classList.remove('open'));
+    </script>
+</body>
+</html>
