@@ -30,3 +30,6 @@ yarn-error.log*
 # Temporary files
 .tmp/
 .cache/
+
+# Internal proposals / planning docs
+TELEMETRY_BACKEND_PROPOSAL.md

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile-first viewport; viewport-fit=cover lets us pad for the iPhone home indicator -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Buy Simulation Software | Titan Space</title>
+
+    <!-- Reuse the production design system for fonts, colours and tokens -->
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== Design A: One-Tap minimal checkout ===== */
+        /* Experimental page - styles are inlined so the rest of the site is untouched */
+
+        /* Lay the page out as a full-height centred column on mobile */
+        .checkout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: calc(var(--nav-height) + var(--spacing-lg)) var(--spacing-lg) var(--spacing-2xl);
+            text-align: center;
+        }
+
+        /* A small "experimental" tag so it is clear this is a sandbox */
+        .sandbox-flag {
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-tertiary);
+            border: 1px solid var(--color-border);
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* The product visual placeholder, matching the products page style */
+        .product-mark {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            background: var(--color-surface-elevated);
+            border: 1px solid var(--color-border);
+            color: var(--color-accent);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        /* Product name and supporting copy */
+        .checkout h1 { font-size: var(--font-size-3xl); margin-bottom: var(--spacing-sm); }
+        .checkout .blurb {
+            color: var(--color-text-secondary);
+            max-width: 28rem;
+            margin: 0 auto var(--spacing-xl);
+        }
+
+        /* The headline price */
+        .price {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+        .price .unit {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 400;
+            color: var(--color-text-tertiary);
+            letter-spacing: 0.05em;
+            margin-top: var(--spacing-xs);
+        }
+
+        /* Shared Apple Pay button styling - see the bottom of the file for the fallback note */
+        .apple-pay-button {
+            -webkit-appearance: none;
+            appearance: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 22rem;
+            height: 54px;
+            margin-top: var(--spacing-xl);
+            background: #000;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 8px;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        /* The custom fallback content (logo + word) shown when native styling is unavailable */
+        .apple-pay-button .ap-logo { width: 20px; height: 20px; fill: #fff; }
+
+        /* When Safari/iOS supports the native button, hand the rendering to the OS */
+        @supports (-webkit-appearance: -apple-pay-button) {
+            .apple-pay-button {
+                -webkit-appearance: -apple-pay-button;
+                -apple-pay-button-type: buy;
+                -apple-pay-button-style: black;
+                border: 0;
+            }
+            /* Hide our fallback content; the OS draws the real button face */
+            .apple-pay-button .ap-fallback { display: none; }
+        }
+
+        /* ===== Mocked Apple Pay sheet (shared across the experimental pages) ===== */
+        /* Dimmed backdrop behind the sheet */
+        .ap-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-base);
+            z-index: 1000;
+        }
+        .ap-overlay.open { opacity: 1; pointer-events: auto; }
+
+        /* The white system-style sheet that slides up from the bottom */
+        .ap-sheet {
+            width: 100%;
+            max-width: 480px;
+            background: #1c1c1e;
+            color: #fff;
+            border-radius: 16px 16px 0 0;
+            padding: var(--spacing-lg) var(--spacing-lg) calc(var(--spacing-lg) + env(safe-area-inset-bottom));
+            transform: translateY(100%);
+            transition: transform var(--transition-base);
+            font-family: var(--font-family);
+        }
+        .ap-overlay.open .ap-sheet { transform: translateY(0); }
+
+        /* Sheet header reads like the real Apple Pay sheet */
+        .ap-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .ap-head .ap-title { display: flex; align-items: center; gap: 0.4rem; font-weight: 600; font-size: var(--font-size-lg); }
+        .ap-head .ap-logo { width: 22px; height: 22px; fill: #fff; }
+        .ap-close { color: rgba(255,255,255,0.6); font-size: 1.5rem; line-height: 1; }
+
+        /* Order summary rows inside the sheet */
+        .ap-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .ap-row .label { color: rgba(255,255,255,0.6); }
+        .ap-row.total { font-weight: 700; font-size: var(--font-size-lg); border-bottom: 0; }
+
+        /* The simulated confirm button (stands in for Face ID / Touch ID) */
+        .ap-confirm {
+            width: 100%;
+            height: 50px;
+            margin-top: var(--spacing-md);
+            background: #fff;
+            color: #000;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: var(--font-size-base);
+        }
+        .ap-hint { text-align: center; color: rgba(255,255,255,0.5); font-size: var(--font-size-sm); margin-top: var(--spacing-sm); }
+
+        /* Processing + success states swap inside the sheet body */
+        .ap-state { display: none; text-align: center; padding: var(--spacing-lg) 0; }
+        .ap-state.active { display: block; }
+        .ap-spinner {
+            width: 44px; height: 44px; margin: 0 auto var(--spacing-md);
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: ap-spin 0.8s linear infinite;
+        }
+        @keyframes ap-spin { to { transform: rotate(360deg); } }
+        .ap-tick { width: 56px; height: 56px; margin: 0 auto var(--spacing-md); stroke: #30d158; }
+        .ap-success-title { font-weight: 600; }
+
+        /* Minimal nav for the experimental pages - just brand + back link */
+        .exp-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+            background: rgba(0,0,0,0.85); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border); z-index: 100;
+        }
+        .exp-nav .logo { font-weight: 700; letter-spacing: 0.1em; }
+        .exp-nav a.back { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+    </style>
+</head>
+<body>
+    <!-- Lightweight nav so the page still feels part of the site -->
+    <nav class="exp-nav">
+        <span class="logo">TITAN SPACE</span>
+        <a class="back" href="/products.html">Back to products</a>
+    </nav>
+
+    <main class="checkout">
+        <span class="sandbox-flag">Experimental - mock checkout</span>
+
+        <!-- Product visual + details -->
+        <div class="product-mark">SIM</div>
+        <h1 id="p-name">Simulation Software</h1>
+        <p class="blurb">High-fidelity orbital simulation for mission planning, validation and hardware-in-the-loop testing.</p>
+
+        <!-- Headline price -->
+        <div class="price"><span id="p-price">GBP 4,999</span><span class="unit">per year - single seat licence</span></div>
+
+        <!-- The one-tap Apple Pay button -->
+        <button type="button" class="apple-pay-button" id="payButton" aria-label="Buy with Apple Pay">
+            <span class="ap-fallback" aria-hidden="true">
+                <svg class="ap-logo" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                Pay
+            </span>
+        </button>
+    </main>
+
+    <!-- Mocked Apple Pay overlay (no real payment) -->
+    <div class="ap-overlay" id="apOverlay">
+        <div class="ap-sheet" role="dialog" aria-modal="true" aria-label="Apple Pay">
+            <div class="ap-head">
+                <span class="ap-title">
+                    <svg class="ap-logo" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                    Pay
+                </span>
+                <button type="button" class="ap-close" id="apClose" aria-label="Cancel">&times;</button>
+            </div>
+
+            <!-- State 1: order summary + confirm -->
+            <div class="ap-state active" id="apSummary">
+                <div class="ap-row"><span class="label">Pay Titan Space</span><span id="ap-merchant">Simulation Software</span></div>
+                <div class="ap-row"><span class="label">Card</span><span>Visa &middot;&middot;&middot;&middot; 1989</span></div>
+                <div class="ap-row total"><span>Total</span><span id="ap-total">GBP 4,999.00</span></div>
+                <button type="button" class="ap-confirm" id="apConfirm">Confirm with Face ID</button>
+                <p class="ap-hint">This is a simulation. No card is charged.</p>
+            </div>
+
+            <!-- State 2: processing -->
+            <div class="ap-state" id="apProcessing">
+                <div class="ap-spinner"></div>
+                <p>Processing...</p>
+            </div>
+
+            <!-- State 3: success -->
+            <div class="ap-state" id="apSuccess">
+                <svg class="ap-tick" viewBox="0 0 52 52" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="26" r="24"/><path d="M16 27l7 7 13-14"/></svg>
+                <p class="ap-success-title">Payment complete</p>
+                <p class="ap-hint">Thank you. A receipt would be emailed in a real flow.</p>
+                <button type="button" class="ap-confirm" id="apDone">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Mocked Apple Pay flow for the one-tap design =====
+        // Grab the elements we need to drive the sheet
+        const overlay = document.getElementById('apOverlay');
+        const payButton = document.getElementById('payButton');
+        const summary = document.getElementById('apSummary');
+        const processing = document.getElementById('apProcessing');
+        const success = document.getElementById('apSuccess');
+
+        // Helper: show only the requested state inside the sheet
+        function showState(active) {
+            [summary, processing, success].forEach(s => s.classList.remove('active'));
+            active.classList.add('active');
+        }
+
+        // Open the sheet when the Apple Pay button is tapped
+        payButton.addEventListener('click', () => {
+            showState(summary);          // always start at the summary
+            overlay.classList.add('open');
+        });
+
+        // Close helpers (cancel button and tapping the backdrop)
+        function closeSheet() { overlay.classList.remove('open'); }
+        document.getElementById('apClose').addEventListener('click', closeSheet);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSheet(); });
+
+        // Confirm -> simulate processing -> show success after a short delay
+        document.getElementById('apConfirm').addEventListener('click', () => {
+            showState(processing);
+            // Fake network/auth latency so the flow feels real
+            setTimeout(() => showState(success), 1600);
+        });
+
+        // Done simply closes the sheet
+        document.getElementById('apDone').addEventListener('click', closeSheet);
+    </script>
+</body>
+</html>

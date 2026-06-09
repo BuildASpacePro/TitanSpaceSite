@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile-first viewport; viewport-fit=cover pads for the iPhone home indicator -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Build a Satellite | Titan Space</title>
+
+    <!-- Reuse the production design system -->
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== Design D: multi-step satellite configurator ===== */
+
+        .checkout {
+            padding: calc(var(--nav-height) + var(--spacing-xl)) var(--spacing-lg) var(--spacing-2xl);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .sandbox-flag {
+            display: inline-block;
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-tertiary);
+            border: 1px solid var(--color-border);
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Progress indicator across the top of the wizard */
+        .steps { display: flex; gap: 0.4rem; margin-bottom: var(--spacing-xl); }
+        .step-dot { flex: 1; }
+        .step-dot .bar { height: 4px; background: var(--color-border); border-radius: 2px; transition: background var(--transition-base); }
+        .step-dot.active .bar, .step-dot.done .bar { background: var(--color-accent); }
+        .step-dot .name { display: block; font-size: 0.65rem; color: var(--color-text-tertiary); margin-top: var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.06em; }
+        .step-dot.active .name { color: var(--color-text-primary); }
+
+        /* Each step panel; only the active one is shown */
+        .step-panel { display: none; }
+        .step-panel.active { display: block; animation: fade 0.3s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .product-mark {
+            width: 100%; height: 150px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            background: var(--color-surface-elevated);
+            border: 1px solid var(--color-border);
+            color: var(--color-accent);
+            font-weight: 700; font-size: var(--font-size-2xl); letter-spacing: 0.1em;
+        }
+        .step-panel h1 { font-size: var(--font-size-2xl); margin-bottom: var(--spacing-sm); }
+        .step-panel h2 { font-size: var(--font-size-xl); margin-bottom: var(--spacing-md); }
+        .blurb { color: var(--color-text-secondary); margin-bottom: var(--spacing-lg); }
+
+        /* Option rows (orbit, optical, ground, launch) */
+        .opt-group { margin-bottom: var(--spacing-lg); }
+        .opt-group > .group-label { display: block; color: var(--color-text-secondary); margin-bottom: var(--spacing-sm); }
+        .opt {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: var(--spacing-md);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-sm);
+            cursor: pointer;
+            gap: var(--spacing-md);
+        }
+        .opt.selected { border-color: var(--color-accent); }
+        .opt .opt-main { display: flex; flex-direction: column; }
+        .opt .opt-name { font-weight: 600; }
+        .opt .opt-desc { color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
+        .opt .opt-price { color: var(--color-text-secondary); white-space: nowrap; }
+
+        /* ===== Spectrum rail ===== */
+        .rail-wrap { margin-bottom: var(--spacing-md); }
+        .rail-caption { display: flex; justify-content: space-between; color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
+        .rail {
+            position: relative; height: 72px; margin: 0.5rem 0 0.25rem;
+            background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px;
+        }
+        /* Faint vertical guide line at each decade */
+        .rail-guide { position: absolute; top: 0; height: 46px; width: 1px; background: var(--color-border); }
+        /* A selected band drawn as a coloured segment */
+        .rail-band {
+            position: absolute; top: 8px; height: 38px; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: #00112b; overflow: hidden;
+        }
+        /* Decade axis labels under the track */
+        .rail-tick { position: absolute; top: 50px; font-size: 10px; color: var(--color-text-tertiary); white-space: nowrap; }
+
+        /* Preset band chips */
+        .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: var(--spacing-sm); }
+        .chip {
+            padding: 0.45rem 0.8rem; border: 1px solid var(--color-border); border-radius: 999px;
+            color: var(--color-text-secondary); font-size: var(--font-size-sm); cursor: pointer;
+        }
+        .chip.active { border-color: var(--color-accent); color: var(--color-text-primary); background: rgba(0,102,255,0.14); }
+
+        /* Custom range adder */
+        .custom-add { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: var(--spacing-md); }
+        .custom-add input, .custom-add select {
+            padding: 0.5rem; background: var(--color-surface); border: 1px solid var(--color-border);
+            border-radius: 6px; color: var(--color-text-primary); font-family: inherit; font-size: var(--font-size-sm);
+        }
+        .custom-add input { width: 88px; }
+        .custom-add .sep { color: var(--color-text-tertiary); }
+        .custom-add .add-btn { padding: 0.5rem 1rem; border: 1px solid var(--color-accent); color: var(--color-accent); border-radius: 6px; font-weight: 600; }
+        .custom-error { color: #ef476f; font-size: var(--font-size-sm); margin-top: 0.5rem; min-height: 1.1em; }
+
+        /* Selected band list */
+        .band-list { margin-top: var(--spacing-lg); }
+        .band-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0; border-bottom: 1px solid var(--color-border); }
+        .band-swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+        .band-info { flex: 1; min-width: 0; }
+        .band-info .bn { font-weight: 600; }
+        .band-info .br { color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
+        .dir-btn { padding: 0.35rem 0.55rem; border: 1px solid var(--color-border); border-radius: 6px; color: var(--color-text-secondary); font-size: var(--font-size-sm); white-space: nowrap; }
+        .band-price { color: var(--color-text-secondary); font-size: var(--font-size-sm); min-width: 86px; text-align: right; }
+        .band-remove { color: var(--color-text-tertiary); font-size: 1.25rem; line-height: 1; padding: 0 0.25rem; }
+        .empty-hint { color: var(--color-text-tertiary); font-size: var(--font-size-sm); margin-top: var(--spacing-md); }
+
+        /* Running total readout shown on the config steps */
+        .total-readout {
+            display: flex; justify-content: space-between; align-items: baseline;
+            margin-top: var(--spacing-lg); padding-top: var(--spacing-md); border-top: 1px solid var(--color-border);
+        }
+        .total-readout .lbl { color: var(--color-text-secondary); }
+        .total-readout .val { font-size: var(--font-size-xl); font-weight: 700; }
+
+        /* Review list rows */
+        .rev-row { display: flex; justify-content: space-between; gap: var(--spacing-md); padding: var(--spacing-md) 0; border-bottom: 1px solid var(--color-border); }
+        .rev-row .label { color: var(--color-text-secondary); }
+        .rev-row.total { font-weight: 700; font-size: var(--font-size-xl); border-bottom: 0; }
+
+        /* Wizard navigation buttons */
+        .wiz-nav { display: flex; gap: var(--spacing-md); margin-top: var(--spacing-xl); }
+        .btn-next {
+            flex: 1; height: 54px;
+            background: var(--color-accent); color: #fff;
+            border-radius: 8px; font-weight: 600; font-size: var(--font-size-lg);
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .btn-next:active { background: var(--color-accent-hover); }
+        .btn-back {
+            height: 54px; padding: 0 var(--spacing-lg);
+            background: transparent; color: var(--color-text-secondary);
+            border: 1px solid var(--color-border); border-radius: 8px; font-weight: 600;
+        }
+
+        /* Apple Pay button on the final step */
+        .apple-pay-button {
+            -webkit-appearance: none; appearance: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%; height: 54px; margin-top: var(--spacing-md);
+            background: #000; color: #fff; border: 1px solid #fff;
+            border-radius: 8px; font-size: var(--font-size-lg); font-weight: 600;
+        }
+        .apple-pay-button .ap-logo { width: 20px; height: 20px; fill: #fff; }
+        @supports (-webkit-appearance: -apple-pay-button) {
+            .apple-pay-button {
+                -webkit-appearance: -apple-pay-button;
+                -apple-pay-button-type: buy;
+                -apple-pay-button-style: black;
+                border: 0;
+            }
+            .apple-pay-button .ap-fallback { display: none; }
+        }
+        .ap-hint { text-align: center; color: var(--color-text-tertiary); font-size: var(--font-size-sm); margin-top: var(--spacing-sm); }
+
+        /* Pay states on the final step */
+        .pay-state { display: none; text-align: center; padding: var(--spacing-lg) 0; }
+        .pay-state.active { display: block; }
+        .ap-spinner { width: 44px; height: 44px; margin: 0 auto var(--spacing-md); border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--color-text-primary); border-radius: 50%; animation: ap-spin 0.8s linear infinite; }
+        @keyframes ap-spin { to { transform: rotate(360deg); } }
+        .ap-tick { width: 56px; height: 56px; margin: 0 auto var(--spacing-md); stroke: #30d158; }
+        .ap-success-title { font-weight: 600; }
+
+        /* Minimal nav */
+        .exp-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+            background: rgba(0,0,0,0.85); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border); z-index: 100;
+        }
+        .exp-nav .logo { font-weight: 700; letter-spacing: 0.1em; }
+        .exp-nav a.back { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+    </style>
+</head>
+<body>
+    <!-- Lightweight nav -->
+    <nav class="exp-nav">
+        <span class="logo">TITAN SPACE</span>
+        <a class="back" href="/products.html">Back to products</a>
+    </nav>
+
+    <main class="checkout">
+        <span class="sandbox-flag">Experimental - mock checkout</span>
+
+        <!-- Progress indicator (5 steps) -->
+        <div class="steps">
+            <div class="step-dot active" data-step="1"><div class="bar"></div><span class="name">Platform</span></div>
+            <div class="step-dot" data-step="2"><div class="bar"></div><span class="name">Frequencies</span></div>
+            <div class="step-dot" data-step="3"><div class="bar"></div><span class="name">Services</span></div>
+            <div class="step-dot" data-step="4"><div class="bar"></div><span class="name">Review</span></div>
+            <div class="step-dot" data-step="5"><div class="bar"></div><span class="name">Pay</span></div>
+        </div>
+
+        <!-- ===== Step 1: Platform ===== -->
+        <section class="step-panel active" id="step1">
+            <div class="product-mark">TITAN-1 SATELLITE</div>
+            <h1>Build your satellite</h1>
+            <p class="blurb">Configure a Titan-1 platform to your mission. Start with the orbit, then choose the RF bands, optical payloads and ground support.</p>
+
+            <!-- Orbit choice (single-select, included in base) -->
+            <div class="opt-group">
+                <span class="group-label">Target orbit</span>
+                <div class="opt selected" data-orbit="Sun-synchronous (SSO)">
+                    <div class="opt-main"><span class="opt-name">Sun-synchronous (SSO)</span><span class="opt-desc">500-600 km, consistent lighting</span></div>
+                    <span class="opt-price">Included</span>
+                </div>
+                <div class="opt" data-orbit="Low Earth Orbit (LEO)">
+                    <div class="opt-main"><span class="opt-name">Low Earth Orbit (LEO)</span><span class="opt-desc">400-500 km, general purpose</span></div>
+                    <span class="opt-price">Included</span>
+                </div>
+            </div>
+
+            <!-- Platform-level optional service -->
+            <div class="opt-group">
+                <span class="group-label">Platform options</span>
+                <div class="opt" data-addon="launch" data-price="150000">
+                    <div class="opt-main"><span class="opt-name">Launch integration support</span><span class="opt-desc">Falcon 9 rideshare integration</span></div>
+                    <span class="opt-price">+ GBP 150,000</span>
+                </div>
+            </div>
+
+            <div class="total-readout"><span class="lbl">Configured total</span><span class="val total-val">GBP 1,200,000</span></div>
+            <div class="wiz-nav">
+                <button type="button" class="btn-next" data-goto="2">Continue</button>
+            </div>
+        </section>
+
+        <!-- ===== Step 2: Frequencies (RF payload) ===== -->
+        <section class="step-panel" id="step2">
+            <h2>RF payload</h2>
+            <p class="blurb">Add the radio bands your satellite must operate at, anywhere from 100 MHz to 100 GHz. Add as many as you need - the platform can service several at once.</p>
+
+            <div class="rail-wrap">
+                <div class="rail-caption"><span>100 MHz</span><span>RF spectrum (log scale)</span><span>100 GHz</span></div>
+                <!-- The spectrum rail is rendered by JS -->
+                <div class="rail" id="rail"></div>
+            </div>
+
+            <!-- Preset band chips (rendered by JS) -->
+            <span class="group-label">Standard bands</span>
+            <div class="chips" id="chips"></div>
+
+            <!-- Custom range adder -->
+            <div class="custom-add">
+                <input type="number" id="customStart" placeholder="From" inputmode="decimal" min="0">
+                <span class="sep">to</span>
+                <input type="number" id="customEnd" placeholder="To" inputmode="decimal" min="0">
+                <select id="customUnit">
+                    <option value="GHz">GHz</option>
+                    <option value="MHz">MHz</option>
+                </select>
+                <button type="button" class="add-btn" id="customAdd">Add band</button>
+            </div>
+            <div class="custom-error" id="customError"></div>
+
+            <!-- Selected bands list (rendered by JS) -->
+            <div class="band-list" id="bandList"></div>
+
+            <div class="total-readout"><span class="lbl">Configured total</span><span class="val total-val">GBP 1,200,000</span></div>
+            <div class="wiz-nav">
+                <button type="button" class="btn-back" data-goto="1">Back</button>
+                <button type="button" class="btn-next" data-goto="3">Continue</button>
+            </div>
+        </section>
+
+        <!-- ===== Step 3: Services (optical + ground) ===== -->
+        <section class="step-panel" id="step3">
+            <h2>Optical &amp; ground</h2>
+
+            <!-- Optical payloads (off the RF axis, shown separately) -->
+            <div class="opt-group">
+                <span class="group-label">Optical payloads</span>
+                <div class="opt" data-optical="laser" data-price="250000">
+                    <div class="opt-main"><span class="opt-name">Optical laser downlink</span><span class="opt-desc">High-rate optical comms (~1550 nm)</span></div>
+                    <span class="opt-price">+ GBP 250,000</span>
+                </div>
+                <div class="opt" data-optical="imaging" data-price="320000">
+                    <div class="opt-main"><span class="opt-name">Optical imaging payload</span><span class="opt-desc">High-resolution optical camera</span></div>
+                    <span class="opt-price">+ GBP 320,000</span>
+                </div>
+            </div>
+
+            <!-- Ground support services -->
+            <div class="opt-group">
+                <span class="group-label">Ground support services</span>
+                <div class="opt" data-ground="gsn" data-price="60000">
+                    <div class="opt-main"><span class="opt-name">Ground station network access</span><span class="opt-desc">Global S / X / Ka ground network</span></div>
+                    <span class="opt-price">+ GBP 60,000</span>
+                </div>
+                <div class="opt" data-ground="passes" data-price="45000">
+                    <div class="opt-main"><span class="opt-name">Scheduled daily passes</span><span class="opt-desc">Guaranteed daily contacts</span></div>
+                    <span class="opt-price">+ GBP 45,000</span>
+                </div>
+                <div class="opt" data-ground="ops" data-price="180000">
+                    <div class="opt-main"><span class="opt-name">Managed mission operations 24/7</span><span class="opt-desc">Full operations team</span></div>
+                    <span class="opt-price">+ GBP 180,000</span>
+                </div>
+                <div class="opt" data-ground="data" data-price="35000">
+                    <div class="opt-main"><span class="opt-name">Data downlink &amp; storage</span><span class="opt-desc">Hosting and delivery</span></div>
+                    <span class="opt-price">+ GBP 35,000</span>
+                </div>
+                <div class="opt" data-ground="licensing" data-price="25000">
+                    <div class="opt-main"><span class="opt-name">Licensing &amp; regulatory support</span><span class="opt-desc">Spectrum filing and coordination</span></div>
+                    <span class="opt-price">+ GBP 25,000</span>
+                </div>
+            </div>
+
+            <div class="total-readout"><span class="lbl">Configured total</span><span class="val total-val">GBP 1,200,000</span></div>
+            <div class="wiz-nav">
+                <button type="button" class="btn-back" data-goto="2">Back</button>
+                <button type="button" class="btn-next" data-goto="4">Review</button>
+            </div>
+        </section>
+
+        <!-- ===== Step 4: Review ===== -->
+        <section class="step-panel" id="step4">
+            <h2>Review your build</h2>
+            <div id="reviewList"><!-- itemised rows injected here --></div>
+            <div class="wiz-nav">
+                <button type="button" class="btn-back" data-goto="3">Back</button>
+                <button type="button" class="btn-next" data-goto="5">Continue to pay</button>
+            </div>
+        </section>
+
+        <!-- ===== Step 5: Pay ===== -->
+        <section class="step-panel" id="step5">
+            <h2>Payment</h2>
+
+            <!-- Pay stage: summary + Apple Pay -->
+            <div class="pay-state active" id="stSummary">
+                <div class="rev-row total"><span>Amount due</span><span id="payTotal">GBP 1,200,000</span></div>
+                <button type="button" class="apple-pay-button" id="payButton" aria-label="Pay with Apple Pay">
+                    <span class="ap-fallback" aria-hidden="true">
+                        <svg class="ap-logo" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        Pay
+                    </span>
+                </button>
+                <p class="ap-hint">This is a simulation. No card is charged.</p>
+                <div class="wiz-nav"><button type="button" class="btn-back" data-goto="4">Back</button></div>
+            </div>
+
+            <!-- Pay stage: processing -->
+            <div class="pay-state" id="stProcessing">
+                <div class="ap-spinner"></div>
+                <p>Processing...</p>
+            </div>
+
+            <!-- Pay stage: success -->
+            <div class="pay-state" id="stSuccess">
+                <svg class="ap-tick" viewBox="0 0 52 52" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="26" r="24"/><path d="M16 27l7 7 13-14"/></svg>
+                <p class="ap-success-title">Order placed</p>
+                <p class="ap-hint">Thank you. Our team would contact you to begin the build.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ===== Configurator state =====
+        const BASE = 1200000;        // base satellite price in GBP
+        let orbit = 'Sun-synchronous (SSO)';
+        const addons = {};           // platform add-ons: key -> { name, price }
+        const optical = {};          // optical payloads: key -> { name, price }
+        const ground = {};           // ground services: key -> { name, price }
+        let bands = [];              // RF bands: { id, name, startMHz, endMHz, dir, preset }
+        let bandSeq = 0;             // running id for bands
+
+        // Standard IEEE-style bands in MHz (spectrum runs 100 MHz - 100 GHz)
+        const PRESETS = [
+            { name: 'UHF', startMHz: 300, endMHz: 1000 },
+            { name: 'L', startMHz: 1000, endMHz: 2000 },
+            { name: 'S', startMHz: 2000, endMHz: 4000 },
+            { name: 'C', startMHz: 4000, endMHz: 8000 },
+            { name: 'X', startMHz: 8000, endMHz: 12000 },
+            { name: 'Ku', startMHz: 12000, endMHz: 18000 },
+            { name: 'K', startMHz: 18000, endMHz: 27000 },
+            { name: 'Ka', startMHz: 27000, endMHz: 40000 },
+            { name: 'V', startMHz: 40000, endMHz: 75000 },
+            { name: 'W', startMHz: 75000, endMHz: 100000 }
+        ];
+
+        // Colour palette cycled across the selected bands
+        const PALETTE = ['#0066ff', '#00b3ff', '#7c5cff', '#ff7a59', '#2ec28e', '#ffd166', '#ef476f', '#06d6a0', '#c77dff', '#ffa600'];
+
+        // Spectrum bounds in MHz
+        const F_MIN = 100, F_MAX = 100000;
+
+        // Direction cycle for each band
+        const DIRS = ['Downlink', 'Uplink', 'Duplex'];
+
+        // ---- Helpers ----
+        // Format an integer as GBP with thousands separators
+        function gbp(amount) { return 'GBP ' + Math.round(amount).toLocaleString('en-GB'); }
+
+        // Map a frequency (MHz) to a percentage along the log-scale rail
+        function freqToPct(mhz) {
+            const f = Math.min(F_MAX, Math.max(F_MIN, mhz));
+            // log10(100)=2 and log10(100000)=5, so the span is 3 decades
+            return (Math.log10(f) - 2) / 3 * 100;
+        }
+
+        // Friendly frequency label (MHz below 1 GHz, otherwise GHz)
+        function fmtFreq(mhz) {
+            if (mhz < 1000) return mhz + ' MHz';
+            const g = mhz / 1000;
+            return (Number.isInteger(g) ? g : Number(g.toFixed(g < 10 ? 1 : 0))) + ' GHz';
+        }
+
+        // The price tier of a band is set by its centre frequency
+        function bandPrice(band) {
+            const centre = (band.startMHz + band.endMHz) / 2;
+            let tier;
+            if (centre < 2000) tier = 40000;          // UHF / L
+            else if (centre < 8000) tier = 60000;      // S / C
+            else if (centre < 18000) tier = 90000;     // X / Ku
+            else if (centre < 40000) tier = 140000;    // K / Ka
+            else tier = 200000;                        // V / W
+            // Duplex needs both transmit and receive, so it costs more
+            const mult = band.dir === 'Duplex' ? 1.4 : 1.0;
+            return Math.round(tier * mult);
+        }
+
+        // Sum a map of { price } objects
+        function sumMap(map) { return Object.values(map).reduce((s, x) => s + x.price, 0); }
+
+        // The grand total across every selection
+        function total() {
+            const bandTotal = bands.reduce((s, b) => s + bandPrice(b), 0);
+            return BASE + sumMap(addons) + sumMap(optical) + sumMap(ground) + bandTotal;
+        }
+
+        // ===== Rendering =====
+        const railEl = document.getElementById('rail');
+        const chipsEl = document.getElementById('chips');
+        const bandListEl = document.getElementById('bandList');
+
+        // Draw decade guides/labels and one coloured segment per band
+        function renderRail() {
+            let html = '';
+            // Decade axis: 100 MHz, 1 GHz, 10 GHz, 100 GHz
+            const decades = [{ mhz: 100, l: '100 MHz' }, { mhz: 1000, l: '1 GHz' }, { mhz: 10000, l: '10 GHz' }, { mhz: 100000, l: '100 GHz' }];
+            decades.forEach(d => {
+                const p = freqToPct(d.mhz);
+                // Keep the edge labels inside the rail
+                const shift = p <= 0 ? '0' : (p >= 100 ? '-100%' : '-50%');
+                html += '<div class="rail-guide" style="left:' + p + '%"></div>';
+                html += '<div class="rail-tick" style="left:' + p + '%;transform:translateX(' + shift + ')">' + d.l + '</div>';
+            });
+            // One segment per selected band
+            bands.forEach((b, i) => {
+                const l = freqToPct(b.startMHz);
+                const w = Math.max(freqToPct(b.endMHz) - l, 1.5);
+                const c = PALETTE[i % PALETTE.length];
+                html += '<div class="rail-band" style="left:' + l + '%;width:' + w + '%;background:' + c + '">' + (w > 6 ? b.name : '') + '</div>';
+            });
+            railEl.innerHTML = html;
+        }
+
+        // Mark preset chips active when a matching preset band is selected
+        function renderChips() {
+            chipsEl.querySelectorAll('.chip').forEach(chip => {
+                const on = bands.some(b => b.preset === chip.dataset.name);
+                chip.classList.toggle('active', on);
+            });
+        }
+
+        // List each selected band with its direction toggle and remove control
+        function renderBandList() {
+            if (bands.length === 0) {
+                bandListEl.innerHTML = '<p class="empty-hint">No bands added yet. Tap a standard band above or add a custom range.</p>';
+                return;
+            }
+            let html = '';
+            bands.forEach((b, i) => {
+                const c = PALETTE[i % PALETTE.length];
+                html += '<div class="band-row">'
+                    + '<span class="band-swatch" style="background:' + c + '"></span>'
+                    + '<span class="band-info"><span class="bn">' + b.name + '-band</span> '
+                    + '<span class="br">' + fmtFreq(b.startMHz) + ' - ' + fmtFreq(b.endMHz) + '</span></span>'
+                    + '<button type="button" class="dir-btn" data-action="dir" data-id="' + b.id + '">' + b.dir + '</button>'
+                    + '<span class="band-price">+ ' + gbp(bandPrice(b)) + '</span>'
+                    + '<button type="button" class="band-remove" data-action="remove" data-id="' + b.id + '" aria-label="Remove band">&times;</button>'
+                    + '</div>';
+            });
+            bandListEl.innerHTML = html;
+        }
+
+        // Refresh every "Configured total" readout on the page
+        function refreshTotals() {
+            const t = gbp(total());
+            document.querySelectorAll('.total-val').forEach(v => v.textContent = t);
+        }
+
+        // Re-render everything that depends on the current selection
+        function updateAll() {
+            renderRail();
+            renderChips();
+            renderBandList();
+            refreshTotals();
+        }
+
+        // ===== Band add/remove =====
+        // Add a band; presets are de-duplicated by name
+        function addBand(name, startMHz, endMHz, preset) {
+            bands.push({ id: ++bandSeq, name: name, startMHz: startMHz, endMHz: endMHz, dir: 'Downlink', preset: preset || null });
+        }
+
+        // Toggle a preset band on or off
+        function togglePreset(p) {
+            const existing = bands.find(b => b.preset === p.name);
+            if (existing) bands = bands.filter(b => b !== existing);
+            else addBand(p.name, p.startMHz, p.endMHz, p.name);
+            updateAll();
+        }
+
+        // Build the preset chips once
+        PRESETS.forEach(p => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'chip';
+            chip.dataset.name = p.name;
+            chip.textContent = p.name;
+            chip.addEventListener('click', () => togglePreset(p));
+            chipsEl.appendChild(chip);
+        });
+
+        // ===== Custom range adder =====
+        const customError = document.getElementById('customError');
+        document.getElementById('customAdd').addEventListener('click', () => {
+            customError.textContent = '';
+            const unit = document.getElementById('customUnit').value;
+            const factor = unit === 'GHz' ? 1000 : 1;   // convert to MHz
+            const start = parseFloat(document.getElementById('customStart').value) * factor;
+            const end = parseFloat(document.getElementById('customEnd').value) * factor;
+            // Validate the entered range
+            if (isNaN(start) || isNaN(end)) { customError.textContent = 'Enter both a start and end frequency.'; return; }
+            if (start >= end) { customError.textContent = 'The start must be below the end.'; return; }
+            if (start < F_MIN || end > F_MAX) { customError.textContent = 'Range must sit within 100 MHz - 100 GHz.'; return; }
+            addBand('Custom', Math.round(start), Math.round(end), null);
+            // Clear the inputs for the next entry
+            document.getElementById('customStart').value = '';
+            document.getElementById('customEnd').value = '';
+            updateAll();
+        });
+
+        // Delegate direction-toggle and remove clicks in the band list
+        bandListEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+            const id = Number(btn.dataset.id);
+            const band = bands.find(b => b.id === id);
+            if (!band) return;
+            if (btn.dataset.action === 'remove') {
+                bands = bands.filter(b => b.id !== id);
+            } else if (btn.dataset.action === 'dir') {
+                // Advance to the next direction in the cycle
+                band.dir = DIRS[(DIRS.indexOf(band.dir) + 1) % DIRS.length];
+            }
+            updateAll();
+        });
+
+        // ===== Orbit / add-on / optical / ground toggles =====
+        // Orbit is single-select
+        document.querySelectorAll('.opt[data-orbit]').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.opt[data-orbit]').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                orbit = opt.dataset.orbit;
+            });
+        });
+
+        // Generic multi-select toggle for a data-* attribute backed by a map
+        function wireToggle(attr, map) {
+            document.querySelectorAll('.opt[data-' + attr + ']').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const key = opt.dataset[attr];
+                    if (map[key]) { delete map[key]; opt.classList.remove('selected'); }
+                    else { map[key] = { name: opt.querySelector('.opt-name').textContent, price: Number(opt.dataset.price) }; opt.classList.add('selected'); }
+                    refreshTotals();
+                });
+            });
+        }
+        wireToggle('addon', addons);
+        wireToggle('optical', optical);
+        wireToggle('ground', ground);
+
+        // ===== Review =====
+        // Build the itemised review from every current selection
+        function renderReview() {
+            const rows = [];
+            rows.push(['Titan-1 Satellite', gbp(BASE)]);
+            rows.push(['Orbit', orbit]);
+            Object.values(addons).forEach(a => rows.push([a.name, '+ ' + gbp(a.price)]));
+            bands.forEach(b => rows.push([b.name + '-band ' + fmtFreq(b.startMHz) + '-' + fmtFreq(b.endMHz) + ' (' + b.dir + ')', '+ ' + gbp(bandPrice(b))]));
+            Object.values(optical).forEach(o => rows.push([o.name, '+ ' + gbp(o.price)]));
+            Object.values(ground).forEach(g => rows.push([g.name, '+ ' + gbp(g.price)]));
+            // Render the rows then a bold total
+            let html = '';
+            rows.forEach(r => { html += '<div class="rev-row"><span class="label">' + r[0] + '</span><span>' + r[1] + '</span></div>'; });
+            html += '<div class="rev-row total"><span>Total</span><span>' + gbp(total()) + '</span></div>';
+            document.getElementById('reviewList').innerHTML = html;
+        }
+
+        // ===== Step navigation =====
+        const dots = document.querySelectorAll('.step-dot');
+        const panels = {
+            1: document.getElementById('step1'), 2: document.getElementById('step2'),
+            3: document.getElementById('step3'), 4: document.getElementById('step4'),
+            5: document.getElementById('step5')
+        };
+
+        // Switch the visible panel and update the progress dots
+        function goto(step) {
+            Object.entries(panels).forEach(([n, panel]) => panel.classList.toggle('active', Number(n) === step));
+            dots.forEach(dot => {
+                const n = Number(dot.dataset.step);
+                dot.classList.toggle('active', n === step);
+                dot.classList.toggle('done', n < step);
+            });
+            // Refresh the review on step 4 and the pay amount on step 5
+            if (step === 4) renderReview();
+            if (step === 5) document.getElementById('payTotal').textContent = gbp(total());
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Wire every button that carries a data-goto target
+        document.querySelectorAll('[data-goto]').forEach(btn => {
+            btn.addEventListener('click', () => goto(Number(btn.dataset.goto)));
+        });
+
+        // ===== Mocked Apple Pay on step 5 =====
+        const stSummary = document.getElementById('stSummary');
+        const stProcessing = document.getElementById('stProcessing');
+        const stSuccess = document.getElementById('stSuccess');
+
+        // Show only the requested pay stage
+        function showStage(active) {
+            [stSummary, stProcessing, stSuccess].forEach(s => s.classList.remove('active'));
+            active.classList.add('active');
+        }
+
+        // Apple Pay -> processing -> success (mocked)
+        document.getElementById('payButton').addEventListener('click', () => {
+            showStage(stProcessing);
+            setTimeout(() => showStage(stSuccess), 1600);
+        });
+
+        // Paint the initial state on load
+        updateAll();
+    </script>
+</body>
+</html>
